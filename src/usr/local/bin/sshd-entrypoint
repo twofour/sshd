@@ -15,7 +15,7 @@ if [ -n "$SSHD_MOTD" ]; then
 fi
 
 if [ -n "$SSHD_REMOTE_KEYS_URL" ]; then
-    echo "AuthorizedKeysCommand /usr/bin/curl --silent --fail $OPENSSH_REMOTE_KEYS_URL" >> /etc/ssh/sshd_config
+    echo "AuthorizedKeysCommand /usr/bin/curl --silent --fail $SSHD_REMOTE_KEYS_URL" >> /etc/ssh/sshd_config
     echo "AuthorizedKeysCommandUser nobody" >> /etc/ssh/sshd_config
 fi
 
