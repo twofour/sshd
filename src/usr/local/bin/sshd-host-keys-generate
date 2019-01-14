@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -e
+
+# Restore keys from volume
+if [ -n "$(ls /etc/ssh/host_keys/ssh_host_*_key*)" ]; then
+    ln -sf /etc/ssh/host_keys/ssh_host_*_key* /etc/ssh/
+fi
+
+# Generate missing keys
+ssh-keygen -A
+
+# Move key files (not symlinks) to the volume
+find /etc/ssh/ssh_host_*_key* -type f | xargs -I filename mv filename /etc/ssh/host_keys/
+
+# Symlink new keys
+if [ -n "$(ls /etc/ssh/host_keys/ssh_host_*_key*)" ]; then
+    ln -sf /etc/ssh/host_keys/ssh_host_*_key* /etc/ssh/
+fi

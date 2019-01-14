@@ -1,0 +1,41 @@
+#!/bin/sh
+
+set -e
+
+sshd-host-keys-generate
+sshd-user-setup
+
+if [ -n "$SSHD_BANNER" ]; then
+    printf "$SSHD_BANNER\n" > /etc/ssh/banner.txt
+    echo "Banner /etc/ssh/banner.txt" >> /etc/ssh/sshd_config
+fi
+
+if [ -n "$SSHD_MOTD" ]; then
+    printf "$SSHD_MOTD\n" > /etc/motd
+fi
+
+if [ -n "$SSHD_REMOTE_KEYS_URL" ]; then
+    echo "AuthorizedKeysCommand /usr/bin/curl --silent --fail $OPENSSH_REMOTE_KEYS_URL" >> /etc/ssh/sshd_config
+    echo "AuthorizedKeysCommandUser nobody" >> /etc/ssh/sshd_config
+fi
+
+if [ "$SSHD_PASSWORD_ALLOW" = "true" ]; then
+    echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
+    echo "AuthenticationMethods publickey,password,keyboard-interactive" >> /etc/ssh/sshd_config
+fi
+
+if [ "$1" = "/usr/sbin/sshd" ]; then
+    # no detach
+    set -- "$@" "-D"
+
+    # Write logs to /dev/stderr
+    set -- "$@" "-e"
+
+    # Config file
+    set -- "$@" -f "/etc/ssh/sshd_config"
+
+    # Debug
+    # set -- "$@" -d
+fi
+
+exec "$@"

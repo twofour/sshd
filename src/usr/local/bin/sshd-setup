@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+apk add --no-cache \
+    openssh-server=~$OPENSSH_SERVER_VERSION \
+    openssh-sftp-server=~$OPENSSH_SERVER_VERSION \
+    openssh-client=~$OPENSSH_SERVER_VERSION \
+    rsync \
+    curl
+
+mkdir -m 0755 /etc/ssh/host_keys
+chmod g-w,o-w /etc

@@ -1,0 +1,14 @@
+AuthorizedKeysFile /run/secrets/%u.pub
+PasswordAuthentication no
+PermitEmptyPasswords no
+PermitRootLogin no
+PubkeyAuthentication yes
+Subsystem sftp internal-sftp
+
+# AuthenticationMethods "publickey"
+ClientAliveInterval 60
+ClientAliveCountMax 3
+LoginGraceTime 60
+MaxAuthTries 3
+StrictModes yes
+TCPKeepAlive yes

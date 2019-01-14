@@ -1,0 +1,11 @@
+#!/bin/sh
+
+username=$1
+echo Add user $username
+if getent passwd $username > /dev/null; then
+    echo User $username already exists
+    exit 0
+fi
+
+adduser -D $username
+passwd -u -d $username

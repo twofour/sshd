@@ -1,0 +1,33 @@
+#!/bin/sh
+
+set -e
+
+if [ -d "/run/secrets" ]; then
+    chmod 755 /run/secrets
+fi
+
+printf "$SSHD_USER_NAMES\n" >> /tmp/usernames
+
+# Generate user names from public key files names.
+for file in $(ls /run/secrets/*.pub); do
+    username=$(basename $file .pub)
+    echo $username >> /tmp/usernames
+done
+
+# Generate user names from password files.
+for file in $(ls /run/secrets/*.password); do
+    username=$(basename $file .password)
+    echo $username >> /tmp/usernames
+
+    password=$(cat $file)
+    echo $username:$password >> /tmp/passwords
+done
+
+# Create users
+sort /tmp/usernames | uniq | xargs -n 1 sshd-user-add
+
+# Import passwords.
+if [ -f /tmp/passwords ]; then
+    chpasswd < /tmp/passwords
+    rm /tmp/passwords
+fi
