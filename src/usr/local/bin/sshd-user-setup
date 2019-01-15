@@ -24,7 +24,8 @@ for file in $(ls /run/secrets/*.password); do
 done
 
 # Create users
-sort /tmp/usernames | uniq | xargs -n 1 sshd-user-add
+sort /tmp/usernames | uniq | xargs -r -n 1 sshd-user-add
+rm /tmp/usernames
 
 # Import passwords.
 if [ -f /tmp/passwords ]; then

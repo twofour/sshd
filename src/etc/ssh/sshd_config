@@ -1,5 +1,4 @@
 AuthorizedKeysFile /run/secrets/%u.pub
-PasswordAuthentication no
 PermitEmptyPasswords no
 PermitRootLogin no
 PubkeyAuthentication yes
